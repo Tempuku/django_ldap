@@ -8,3 +8,4 @@ with contextlib.suppress(ImportError):
 from .settings import *
 from .ldap import *
 from .drf import *
+from .logging import *
