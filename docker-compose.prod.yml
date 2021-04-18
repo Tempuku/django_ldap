@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+  web:
+    build: ./
+    command: sh -c "/usr/src/app/conf/run.sh"
+    volumes:
+      - ./:/usr/src/app/
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+  server:
+    build: ./conf/nginx
+    restart: always
+    depends_on:
+      - web
+    ports:
+      - '7050:80'
+    volumes:
+      - ./conf/nginx/nginx.conf:/etc/nginx/conf.d/local.conf
+      - ./public:/code/public
+#  nats:
+##    restart: always
+#    hostname: nats-server
+#    image: nats
+#    ports:
+#      - "6205:8222"
+#      - "6206:4222"
+#
+  db:
+    image: postgres:11-alpine
+    env_file:
+    - ./.env
+    volumes:
+      - ./postgresql/dumps:/code/dumps
+      - ./postgresql/data:/var/lib/postgresql/data
+#
+#  redis:
+#    image: redis:alpine
+#    ports:
+#      - '6379:6379'
+#
+#  rethink:
+#    image: rethinkdb:2.4
+##    environment:
+##      - POSTGRES_DB
+##      - POSTGRES_USER
+##      - POSTGRES_PASSWORD
+#    ports:
+#      - '${RETHINKDB_PORT}:28015'
+#      - '${RETHINKDB_WEB_PORT}:8080'
+#    volumes:
+#      - ./rethinkdb/data:/data

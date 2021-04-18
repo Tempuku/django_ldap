@@ -9,3 +9,4 @@ from .settings import *
 from .ldap import *
 from .drf import *
 from .logging import *
+from .database import *
